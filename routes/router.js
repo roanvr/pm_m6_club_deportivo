@@ -21,4 +21,28 @@ routes.get('/agregar', (req, res) => {
     res.send('Datos agregados exitosamente')
 });
 
+routes.get('/editar', (req, res) => {
+    const {nombre, precio, nombreNuevo, precioNuevo} = req.query;
+    const dataJson = fs.readFileSync('./assets/data/data.json')
+    let {deportes} = JSON.parse(dataJson)
+    const editarDeporte = deportes.find(item => item.nombre === nombre);
+    if (nombreNuevo) {
+        editarDeporte.nombre = nombreNuevo;
+    };
+    if (precioNuevo) {
+        editarDeporte.precio = nuevoPrecio;
+    }
+    fs.writeFileSync('./assets/data/data.json', JSON.stringify({deportes}));
+    res.send('Deporte editado exitosamente')
+});
+
+routes.get('/eliminar', (req, res) => {
+    const {nombre} = req.query;
+    const dataJson = fs.readFileSync('./assets/data/data.json')
+    let {deportes} = JSON.parse(dataJson)
+    deportes = deportes.filter(item => item.nombre == nombre)
+    fs.writeFileSync('./assets/data/data.json', JSON.stringify({deportes}));
+    res.send('Elemento eliminado')
+});
+
 export default routes
